@@ -11,6 +11,7 @@ const PRODUCTS = [
 
 let cart = [];
 
+// Render products dynamically
 function renderProducts() {
   const list = document.getElementById("product-list");
   list.innerHTML = "";
@@ -18,17 +19,20 @@ function renderProducts() {
     const div = document.createElement("div");
     div.className = "col-sm-6 col-md-4 col-lg-3";
     div.innerHTML = `
-      <div class="card">
-        <img src="${p.file}" alt="${p.name}">
-        <h3>${p.name}</h3>
-        <p>৳${p.price * EXCHANGE_RATE}</p>
-        <button class="btn btn-primary" onclick="addToCart(${p.id})">Add to Cart</button>
+      <div class="card h-100 shadow-sm">
+        <img src="${p.file}" class="card-img-top" alt="${p.name}">
+        <div class="card-body text-center">
+          <h5 class="card-title">${p.name}</h5>
+          <p class="card-text fw-bold text-primary">৳${p.price * EXCHANGE_RATE}</p>
+          <button class="btn btn-primary w-100" onclick="addToCart(${p.id})">Add to Cart</button>
+        </div>
       </div>
     `;
     list.appendChild(div);
   });
 }
 
+// Add item to cart
 function addToCart(id) {
   const item = cart.find(i => i.id === id);
   if (item) {
@@ -40,11 +44,13 @@ function addToCart(id) {
   updateCartCount();
 }
 
+// Update cart count in navbar
 function updateCartCount() {
   const count = cart.reduce((sum, i) => sum + i.qty, 0);
   document.getElementById("cart-count").textContent = count;
 }
 
+// Show cart panel
 function showCart() {
   document.getElementById("cart-panel").classList.remove("hidden");
   const items = document.getElementById("cart-items");
@@ -52,20 +58,30 @@ function showCart() {
   let total = 0;
   cart.forEach(i => {
     total += i.price * i.qty;
-    items.innerHTML += `<li class="list-group-item">${i.name} x${i.qty} - ৳${i.price * EXCHANGE_RATE * i.qty}</li>`;
+    items.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                          ${i.name} x${i.qty}
+                          <span>৳${i.price * EXCHANGE_RATE * i.qty}</span>
+                        </li>`;
   });
   document.getElementById("cart-total").textContent = "Total: ৳" + total * EXCHANGE_RATE;
 }
 
+// Hide cart panel
 function hideCart() {
   document.getElementById("cart-panel").classList.add("hidden");
 }
 
+// Checkout function
 function checkout() {
-  alert("Demo checkout! (No real payment)");
+  if (cart.length === 0) {
+    alert("Your cart is empty!");
+    return;
+  }
+  alert("Demo checkout complete! (No real payment)");
   cart = [];
   updateCartCount();
   hideCart();
 }
 
+// Initialize
 renderProducts();

@@ -1,3 +1,5 @@
+const EXCHANGE_RATE = 110; // 1 USD = 110 BDT (example)
+
 const PRODUCTS = [
   { id: 1, name: "Guitar", price: 500, file: "guitar.png" },
   { id: 2, name: "Piano", price: 1500, file: "piano.png" },
@@ -14,12 +16,14 @@ function renderProducts() {
   list.innerHTML = "";
   PRODUCTS.forEach(p => {
     const div = document.createElement("div");
-    div.className = "card";
+    div.className = "col-sm-6 col-md-4 col-lg-3";
     div.innerHTML = `
-      <img src="${p.file}" alt="${p.name}">
-      <h3>${p.name}</h3>
-      <p>$${p.price}</p>
-      <button onclick="addToCart(${p.id})">Add to Cart</button>
+      <div class="card">
+        <img src="${p.file}" alt="${p.name}">
+        <h3>${p.name}</h3>
+        <p>৳${p.price * EXCHANGE_RATE}</p>
+        <button class="btn btn-primary" onclick="addToCart(${p.id})">Add to Cart</button>
+      </div>
     `;
     list.appendChild(div);
   });
@@ -48,9 +52,9 @@ function showCart() {
   let total = 0;
   cart.forEach(i => {
     total += i.price * i.qty;
-    items.innerHTML += `<li>${i.name} x${i.qty} - $${i.price * i.qty}</li>`;
+    items.innerHTML += `<li class="list-group-item">${i.name} x${i.qty} - ৳${i.price * EXCHANGE_RATE * i.qty}</li>`;
   });
-  document.getElementById("cart-total").textContent = "Total: $" + total;
+  document.getElementById("cart-total").textContent = "Total: ৳" + total * EXCHANGE_RATE;
 }
 
 function hideCart() {
